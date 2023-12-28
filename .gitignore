@@ -1,0 +1,20 @@
+# Compiled files
+/target/
+
+# Backup files
+**/*.swp
+**/*.bak
+**/*.tmp
+**/*~
+**/.DS_Store
+
+# Rust tooling
+**/Cargo.lock
+/debug/
+**/*.rs.bk
+
+# Editor directories
+.vscode/
+
+# Environment files
+.env
