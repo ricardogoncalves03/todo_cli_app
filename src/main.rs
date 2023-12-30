@@ -1,16 +1,24 @@
 mod todo_table;
-mod task_group;
+mod task_status;
+
+use std::ptr::eq;
 
 use todo_table::ToDoTable;
-// use comfy_table::Table;
+use task_status::TaskStatus;
+use comfy_table::Table;
 // use cli_display_table::{add_row, setup_to_do_table};
 
 fn main() {
-    let mut todo_table = ToDoTable::new();
-    todo_table.add_to_backlog("Fix bug in code".to_string());
-    todo_table.add_to_todo("Write documentation".to_string());
-    todo_table.add_to_done("Deploy app".to_string());
 
-    // Display the table
+    let mut todo_table = ToDoTable::new();
+
+    todo_table.add_task("Learn Rust".to_string(), TaskStatus::Backlog);
+    todo_table.add_task("Grocery Shopping".to_string(), TaskStatus::ToDo);
+    
     todo_table.display();
+
+    todo_table.update_task_status("Learn Rust".to_string(), TaskStatus::ToDo);
+
+    // todo_table.display();
+
 }
