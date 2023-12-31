@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use crate::task_status::TaskStatus;
-use comfy_table::{Table, ContentArrangement, Cell, CellAlignment};
+use comfy_table::{Table, ContentArrangement};
 
 pub struct ToDoTable {
     table: Table,
@@ -9,26 +9,27 @@ pub struct ToDoTable {
 
 impl ToDoTable {
     pub fn new() -> Self {
-        let mut table = Table::new();
-        table
-            .set_header(vec![
-                TaskStatus::Backlog.to_string(),
-                TaskStatus::ToDo.to_string(),
-                TaskStatus::Done.to_string(),
-                ])
-            .set_content_arrangement(ContentArrangement::DynamicFullWidth);
-
         Self {
-            table,
+            table: Self::create_table_with_headers(),
             tasks: HashMap::new(),
         }
     }
 
+    fn create_table_with_headers() -> Table {
+        let mut table = Table::new();
+
+        table.set_header(vec![
+            TaskStatus::Backlog.to_string(),
+            TaskStatus::ToDo.to_string(),
+            TaskStatus::Done.to_string(),
+        ])
+        .set_content_arrangement(ContentArrangement::DynamicFullWidth);
+        table
+    }
+
     pub fn add_task(&mut self, task: String, status: TaskStatus) {
-        // Update the tasks HashMap
         self.tasks.insert(task.clone(), status);
 
-        // Decide where to place the task in the table based on its status
         match status {
             TaskStatus::Backlog => self.table.add_row(vec![task, "".to_string(), "".to_string()]),
             TaskStatus::ToDo => self.table.add_row(vec!["".to_string(), task, "".to_string(),]),
@@ -36,14 +37,25 @@ impl ToDoTable {
         };
     }
 
-    // This method can be extended or modified to handle task updates and re-render the table
-    pub fn update_task_status(&mut self, task: String, new_status: TaskStatus) {
-        self.tasks.remove(&task);
-        self.add_task(task, new_status);
-        self.display();
-        // Not working as intended. It's adding a new line and not deleting the one before.
-        // Only option as of now is to generate an entire new table here
+    pub fn update_task_status(&mut self, task: &str, new_status: TaskStatus) {
+
+        if let Some(status) = self.tasks.get_mut(task) {
+            *status = new_status;
+
+            //Create a new table
+            let mut new_table = Self::create_table_with_headers();
+
+            for (task_name, &status) in &self.tasks {
+                let row = match status {
+                    TaskStatus::Backlog => vec![task_name.to_string(), "".to_string(), "".to_string()],
+                    TaskStatus::ToDo => vec!["".to_string(), task_name.to_string(), "".to_string()],
+                    TaskStatus::Done => vec!["".to_string(), "".to_string(), task_name.to_string()],
+                };
+                new_table.add_row(row);
+            } 
+        self.table = new_table;
         }
+    }
 
     pub fn display(&self) {
         println!("{}", self.table.to_string());
