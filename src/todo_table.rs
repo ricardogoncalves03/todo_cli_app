@@ -4,7 +4,7 @@ use std::collections::HashMap;
 
 pub struct ToDoTable {
     table: Table,
-    tasks: HashMap<String, TaskStatus>,
+    pub tasks: HashMap<String, TaskStatus>,
 }
 
 impl ToDoTable {
@@ -53,9 +53,7 @@ impl ToDoTable {
 
             for (task_name, &status) in &self.tasks {
                 let row = match status {
-                    TaskStatus::Backlog => {
-                        vec![task_name.to_string(), "".to_string(), "".to_string()]
-                    }
+                    TaskStatus::Backlog => vec![task_name.to_string(), "".to_string(), "".to_string()],
                     TaskStatus::ToDo => vec!["".to_string(), task_name.to_string(), "".to_string()],
                     TaskStatus::Done => vec!["".to_string(), "".to_string(), task_name.to_string()],
                 };
@@ -63,6 +61,28 @@ impl ToDoTable {
             }
             self.table = new_table;
         }
+    }
+
+    pub fn delete_task(&mut self, task: &str) {
+        if self.tasks.remove(task).is_some() {
+            // If the task was successfully removed, rebuild the table
+            self.rebuild_table();
+        } else {
+            println!("Task not found.");
+        }
+    }
+
+    fn rebuild_table(&mut self) {
+        let mut new_table = Self::create_table_with_headers();
+        for (task_name, &status) in &self.tasks {
+            let row = match status {
+                TaskStatus::Backlog => vec![task_name.to_string(), "".to_string(), "".to_string()],
+                TaskStatus::ToDo => vec!["".to_string(), task_name.to_string(), "".to_string()],
+                TaskStatus::Done => vec!["".to_string(), "".to_string(), task_name.to_string()],
+            };
+            new_table.add_row(row);
+        }
+        self.table = new_table;
     }
 
     pub fn display(&self) {
