@@ -64,7 +64,7 @@ impl ToDoTable {
         }
     }
 
-    fn rebuild_table(&mut self) {
+    pub fn rebuild_table(&mut self) {
         let mut new_table = Self::create_table_with_headers();
         for (task_name, &status) in &self.tasks {
             let row = match status {
