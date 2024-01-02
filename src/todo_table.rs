@@ -48,18 +48,10 @@ impl ToDoTable {
         if let Some(status) = self.tasks.get_mut(task) {
             *status = new_status;
 
-            //Create a new table
-            let mut new_table = Self::create_table_with_headers();
-
-            for (task_name, &status) in &self.tasks {
-                let row = match status {
-                    TaskStatus::Backlog => vec![task_name.to_string(), "".to_string(), "".to_string()],
-                    TaskStatus::ToDo => vec!["".to_string(), task_name.to_string(), "".to_string()],
-                    TaskStatus::Done => vec!["".to_string(), "".to_string(), task_name.to_string()],
-                };
-                new_table.add_row(row);
-            }
-            self.table = new_table;
+            // Rebuild the table to reflect the updated task status
+            self.rebuild_table();
+        } else {
+            println!("Task not found.");
         }
     }
 

@@ -66,3 +66,28 @@ pub fn get_task_update_input(tasks: &HashMap<String, TaskStatus>) -> Option<(Str
     Some((task_name.to_string(), status))
 }
 
+pub fn get_task_name_input(tasks: &HashMap<String, TaskStatus>) -> Option<String> {
+    if tasks.is_empty() {
+        println!("No tasks available to delete.");
+        return None;
+    }
+
+    // Display all tasks
+    println!("Available tasks for deletion:");
+    for (task, status) in tasks {
+        println!("{} (status: {})", task, status);
+    }
+
+    // Get the task name for deletion
+    let mut task_name = String::new();
+    println!("Enter the name of the task to delete:");
+    io::stdin().read_line(&mut task_name).expect("Failed to read line");
+
+    let task_name = task_name.trim();
+    if task_name.is_empty() {
+        println!("Task name cannot be empty.");
+        return None;
+    }
+
+    Some(task_name.to_string())
+}
