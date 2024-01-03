@@ -81,3 +81,46 @@ impl ToDoTable {
         println!("{}", self.table.to_string());
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_add_task() {
+        let mut table = ToDoTable::new();
+        table.add_task("Test Task 1".to_string(), TaskStatus::Backlog);
+
+        assert_eq!(table.tasks.contains_key("Test Task 1"), true);
+        assert_eq!(
+            *table.tasks.get("Test Task 1").unwrap(),
+            TaskStatus::Backlog
+        );
+    }
+
+    #[test]
+    fn test_update_task_status() {
+        let mut table = ToDoTable::new();
+        table.add_task("Test Task 2".to_string(), TaskStatus::Backlog);
+        table.update_task_status("Test Task 2", TaskStatus::ToDo);
+
+        assert_eq!(*table.tasks.get("Test Task 2").unwrap(), TaskStatus::ToDo);
+    }
+
+    #[test]
+    fn test_delete_task() {
+        let mut table = ToDoTable::new();
+        table.add_task("Test Task 3".to_string(), TaskStatus::Backlog);
+        table.delete_task("Test Task 3");
+
+        assert_eq!(table.tasks.contains_key("Test Task 3"), false);
+    }
+
+    #[test]
+    fn test_rebuild_table() {
+        let mut table = ToDoTable::new();
+        table.add_task("Test Task 4".to_string(), TaskStatus::Backlog);
+        table.add_task("Test Task 5".to_string(), TaskStatus::ToDo);
+        table.rebuild_table();
+    }
+}

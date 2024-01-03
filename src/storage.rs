@@ -1,8 +1,8 @@
-use std::fs::File;
-use std::io::prelude::*;
+use crate::task_status::TaskStatus;
 use serde_json;
 use std::collections::HashMap;
-use crate::task_status::TaskStatus;
+use std::fs::File;
+use std::io::prelude::*;
 
 pub fn save_tasks(tasks: &HashMap<String, TaskStatus>) {
     let serialized = serde_json::to_string(tasks).unwrap();
@@ -16,7 +16,7 @@ pub fn load_tasks() -> HashMap<String, TaskStatus> {
         Err(e) => {
             println!("Failed to open tasks.json: {:?}", e);
             return HashMap::new();
-        },
+        }
     };
     let mut contents = String::new();
     if let Err(e) = file.read_to_string(&mut contents) {

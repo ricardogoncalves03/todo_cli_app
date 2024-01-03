@@ -1,16 +1,20 @@
-use std::io;
 use crate::task_status::TaskStatus;
 use std::collections::HashMap;
+use std::io;
 
 pub fn get_task_input() -> (String, TaskStatus) {
     let mut task_name = String::new();
     let mut task_status = String::new();
 
     println!("Enter task name:");
-    io::stdin().read_line(&mut task_name).expect("Failed to read line");
+    io::stdin()
+        .read_line(&mut task_name)
+        .expect("Failed to read line");
 
     println!("Enter task status (1: Backlog, 2: ToDo, 3: Done):");
-    io::stdin().read_line(&mut task_status).expect("Failed to read line");
+    io::stdin()
+        .read_line(&mut task_status)
+        .expect("Failed to read line");
 
     let status = match task_status.trim() {
         "1" => TaskStatus::Backlog,
@@ -39,7 +43,9 @@ pub fn get_task_update_input(tasks: &HashMap<String, TaskStatus>) -> Option<(Str
 
     let mut task_name = String::new();
     println!("Enter the name of the task to update:");
-    io::stdin().read_line(&mut task_name).expect("Failed to read line");
+    io::stdin()
+        .read_line(&mut task_name)
+        .expect("Failed to read line");
     let task_name = task_name.trim();
 
     // Check if the task exists
@@ -51,7 +57,9 @@ pub fn get_task_update_input(tasks: &HashMap<String, TaskStatus>) -> Option<(Str
     // Get new status
     let mut status_str = String::new();
     println!("Enter the new task status (1: Backlog, 2: ToDo, 3: Done):");
-    io::stdin().read_line(&mut status_str).expect("Failed to read line");
+    io::stdin()
+        .read_line(&mut status_str)
+        .expect("Failed to read line");
 
     let status = match status_str.trim() {
         "1" => TaskStatus::Backlog,
@@ -81,7 +89,9 @@ pub fn get_task_name_input(tasks: &HashMap<String, TaskStatus>) -> Option<String
     // Get the task name for deletion
     let mut task_name = String::new();
     println!("Enter the name of the task to delete:");
-    io::stdin().read_line(&mut task_name).expect("Failed to read line");
+    io::stdin()
+        .read_line(&mut task_name)
+        .expect("Failed to read line");
 
     let task_name = task_name.trim();
     if task_name.is_empty() {
